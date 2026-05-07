@@ -1,5 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Sidebar } from "@/components/sidebar";
+import { ConfettiHost } from "@/components/confetti";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -64,7 +66,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <ThemeProvider>
-      <Outlet />
+      <div className="flex min-h-screen w-full">
+        <Sidebar />
+        <div className="flex-1 min-w-0 flex flex-col">
+          <Outlet />
+        </div>
+      </div>
+      <ConfettiHost />
     </ThemeProvider>
   );
 }
