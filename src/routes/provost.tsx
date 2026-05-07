@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { curriculumMap } from "@/lib/api";
 import { useUnlock } from "@/lib/store";
-import type { mockCurriculumMap } from "@/lib/mock-data";
+import { mockCurriculumMap } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/provost")({
   component: ProvostPage,

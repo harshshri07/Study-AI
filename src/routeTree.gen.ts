@@ -9,13 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProvostRouteImport } from './routes/provost'
 import { Route as ProcessingRouteImport } from './routes/processing'
+import { Route as FacultyRouteImport } from './routes/faculty'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ProvostRoute = ProvostRouteImport.update({
+  id: '/provost',
+  path: '/provost',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProcessingRoute = ProcessingRouteImport.update({
   id: '/processing',
   path: '/processing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FacultyRoute = FacultyRouteImport.update({
+  id: '/faculty',
+  path: '/faculty',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -32,40 +44,62 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/faculty': typeof FacultyRoute
   '/processing': typeof ProcessingRoute
+  '/provost': typeof ProvostRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/faculty': typeof FacultyRoute
   '/processing': typeof ProcessingRoute
+  '/provost': typeof ProvostRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/faculty': typeof FacultyRoute
   '/processing': typeof ProcessingRoute
+  '/provost': typeof ProvostRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/processing'
+  fullPaths: '/' | '/dashboard' | '/faculty' | '/processing' | '/provost'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/processing'
-  id: '__root__' | '/' | '/dashboard' | '/processing'
+  to: '/' | '/dashboard' | '/faculty' | '/processing' | '/provost'
+  id: '__root__' | '/' | '/dashboard' | '/faculty' | '/processing' | '/provost'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  FacultyRoute: typeof FacultyRoute
   ProcessingRoute: typeof ProcessingRoute
+  ProvostRoute: typeof ProvostRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/provost': {
+      id: '/provost'
+      path: '/provost'
+      fullPath: '/provost'
+      preLoaderRoute: typeof ProvostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/processing': {
       id: '/processing'
       path: '/processing'
       fullPath: '/processing'
       preLoaderRoute: typeof ProcessingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faculty': {
+      id: '/faculty'
+      path: '/faculty'
+      fullPath: '/faculty'
+      preLoaderRoute: typeof FacultyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -88,7 +122,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  FacultyRoute: FacultyRoute,
   ProcessingRoute: ProcessingRoute,
+  ProvostRoute: ProvostRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
