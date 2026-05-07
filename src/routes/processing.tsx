@@ -2,9 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Mascot } from "@/components/mascot";
 import { z } from "zod";
+import { processUrl } from "@/lib/api";
+import { useRecents } from "@/lib/store";
 
 const searchSchema = z.object({ url: z.string().optional() });
 
@@ -20,11 +22,21 @@ const stages = [
   { code: "04", title: "Indexer", task: "Embedding for semantic search", detail: "Indexed 24,310 tokens" },
 ];
 
+const tips = [
+  "Tip: open any chapter to jump the video to that timestamp.",
+  "Tip: ask the chatbot a question — it knows the lecture.",
+  "Tip: flip flashcards with a click. Mark reviewed to track progress.",
+  "Tip: switch summary depth: TL;DR, Standard, or Deep dive.",
+];
+
 function ProcessingPage() {
   const navigate = useNavigate();
+  const { url } = Route.useSearch();
+  const { addRecent } = useRecents();
   const [stage, setStage] = useState(0);
   const [progress, setProgress] = useState(0);
   const [logIdx, setLogIdx] = useState(0);
+  const [tipIdx, setTipIdx] = useState(0);
 
   const logLines = [
     "› init: handshake with Bedrock gateway",
@@ -40,6 +52,23 @@ function ProcessingPage() {
   ];
 
   useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const lecture = await processUrl(url ?? "");
+      if (cancelled) return;
+      addRecent({
+        id: lecture.videoId,
+        title: lecture.title,
+        channel: lecture.channel,
+        videoId: lecture.videoId,
+        url: url ?? `https://youtube.com/watch?v=${lecture.videoId}`,
+      });
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
+
+  useEffect(() => {
     const stageT = setInterval(() => {
       setStage((s) => {
         if (s >= stages.length - 1) {
@@ -53,31 +82,33 @@ function ProcessingPage() {
 
     const progT = setInterval(() => setProgress((p) => Math.min(p + 1.2, 99)), 50);
     const logT = setInterval(() => setLogIdx((i) => Math.min(i + 1, logLines.length)), 450);
+    const tipT = setInterval(() => setTipIdx((i) => (i + 1) % tips.length), 2800);
 
-    return () => { clearInterval(stageT); clearInterval(progT); clearInterval(logT); };
+    return () => { clearInterval(stageT); clearInterval(progT); clearInterval(logT); clearInterval(tipT); };
   }, [navigate, logLines.length]);
 
   return (
     <div className="min-h-screen flex flex-col relative">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-40" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[420px] w-[420px] rounded-full bg-primary/10 blur-[120px] animate-pulse-soft" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[420px] w-[420px] rounded-full bg-primary/12 blur-[120px] animate-pulse-soft" />
       </div>
 
-      <Header />
-
-      <main className="flex-1 mx-auto w-full max-w-[1100px] px-4 md:px-8 py-12 md:py-20">
+      <main className="flex-1 mx-auto w-full max-w-[1100px] px-4 md:px-8 py-10 md:py-16">
         {/* Heading */}
-        <div className="mb-12 max-w-2xl">
-          <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-4">
-            Workspace · Building
+        <div className="mb-10 max-w-3xl flex items-start gap-5">
+          <Mascot className="h-16 w-16 hidden sm:block animate-float shrink-0" animated />
+          <div>
+            <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-3">
+              Workspace · Building
+            </div>
+            <h1 className="font-serif text-4xl md:text-6xl tracking-tight leading-[1.02]">
+              Reading the lecture<span className="text-primary animate-blink">_</span>
+            </h1>
+            <p className="text-muted-foreground mt-3 text-base">
+              Four agents are working in sequence. This usually takes about 30 seconds.
+            </p>
           </div>
-          <h1 className="font-serif text-5xl md:text-6xl tracking-tight leading-[1.02]">
-            Reading the lecture<span className="text-primary animate-blink">_</span>
-          </h1>
-          <p className="text-muted-foreground mt-4 text-base">
-            Four agents are working in sequence. This usually takes about 30 seconds.
-          </p>
         </div>
 
         {/* Progress bar */}
@@ -86,19 +117,25 @@ function ProcessingPage() {
             <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Progress</span>
             <span className="font-serif text-2xl tabular-nums">{Math.floor(progress)}<span className="text-muted-foreground text-base">%</span></span>
           </div>
-          <div className="h-px bg-border relative overflow-hidden">
+          <div className="h-1.5 bg-border rounded-full relative overflow-hidden">
             <motion.div
-              className="absolute inset-y-0 left-0 bg-foreground"
+              className="absolute inset-y-0 left-0 gradient-warm rounded-full"
               animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.1 }}
-              style={{ height: "1px" }}
-            />
-            <motion.div
-              className="absolute top-0 h-2 w-2 rounded-full bg-primary -translate-y-1/2 shadow-glow"
-              animate={{ left: `${progress}%` }}
               transition={{ duration: 0.1 }}
             />
           </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tipIdx}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.3 }}
+              className="text-xs text-muted-foreground italic mt-3"
+            >
+              {tips[tipIdx]}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -116,7 +153,7 @@ function ProcessingPage() {
                     status === "active"
                       ? "border-primary/40 bg-primary/[0.04]"
                       : status === "done"
-                      ? "border-border bg-surface/50 opacity-60"
+                      ? "border-border bg-surface/50 opacity-70"
                       : "border-border/60 bg-transparent opacity-40"
                   }`}
                 >
@@ -155,7 +192,7 @@ function ProcessingPage() {
 
           {/* Log console */}
           <div className="lg:col-span-2">
-            <div className="surface rounded-xl overflow-hidden lg:sticky lg:top-20">
+            <div className="surface rounded-xl overflow-hidden lg:sticky lg:top-6">
               <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border/60 bg-surface-elevated/50">
                 <div className="flex gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-destructive/60" />
