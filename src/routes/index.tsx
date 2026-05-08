@@ -8,6 +8,7 @@ import {
 import { Footer } from "@/components/footer";
 import { Mascot } from "@/components/mascot";
 import { Button } from "@/components/ui/button";
+import { AnimatedBackground, Aurora } from "@/components/animated-bg";
 import { exampleUrls } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
