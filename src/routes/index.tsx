@@ -178,26 +178,26 @@ function HeroPage() {
           </div>
         </section>
 
-        {/* Pipeline */}
+        {/* How it works */}
         <section className="mx-auto max-w-[1280px] px-4 md:px-10 pb-24">
           <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground mb-3">
-            §02 — The pipeline
+            §02 — How it works
           </div>
           <h2 className="font-serif text-4xl md:text-5xl leading-[1.05] tracking-tight max-w-2xl mb-12">
-            Four agents. <em className="text-primary">One</em> seamless workspace.
+            From a URL to a study kit, <em className="text-primary">in seconds</em>.
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-px surface rounded-xl overflow-hidden">
             {[
-              { n: "01", t: "Extractor", d: "Pulls transcript, captions, and audio segments from the video." },
-              { n: "02", t: "Structurer", d: "Detects chapters, key concepts, and the logical outline." },
-              { n: "03", t: "Synthesizer", d: "Writes summaries at three depths and generates flashcards." },
-              { n: "04", t: "Indexer", d: "Embeds every passage for semantic search and translation." },
+              { n: "01", t: "Paste a link", d: "Drop in any YouTube lecture with captions — public or unlisted." },
+              { n: "02", t: "We read it", d: "The full transcript is parsed into chapters, concepts, and key moments." },
+              { n: "03", t: "Distilled for you", d: "Three depths of summary, flashcards, and a lecture-aware chat partner." },
+              { n: "04", t: "Search anything", d: "Ask in plain English and jump to the exact second the answer appears." },
             ].map((s, i) => (
               <div key={s.n} className="bg-background p-6 hover:bg-surface-elevated transition group relative">
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="h-3.5 w-3.5 text-primary" strokeWidth={1.75} />
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Agent {s.n}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Step {s.n}</span>
                 </div>
                 <h3 className="font-serif text-2xl mb-2">{s.t}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{s.d}</p>
