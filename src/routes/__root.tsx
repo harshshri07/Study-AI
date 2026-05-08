@@ -33,7 +33,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "StudyAI — Turn any lecture into your study kit" },
-      { name: "description", content: "Paste a YouTube URL. AI agents build your personal study dashboard with summaries, flashcards, and semantic search in seconds." },
+      { name: "description", content: "Paste a YouTube URL and turn any lecture into a personal study workspace — summaries, flashcards, lecture-aware chat, and semantic search in seconds." },
       { property: "og:title", content: "StudyAI — Your AI study companion" },
       { property: "og:description", content: "Turn any YouTube lecture into a complete study kit." },
       { property: "og:type", content: "website" },
