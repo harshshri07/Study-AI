@@ -28,8 +28,8 @@ function Dashboard() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { progress, markSection } = useProgress(mockLecture.videoId);
   const { achievements, unlock } = useAchievements();
-  const { award, level, into, toNext, pct: xpPct, xp } = useXp();
-  const { ping, streak } = useStreak();
+  const { award, level } = useXp();
+  const { ping } = useStreak();
   const prevLevelRef = useRef(level);
 
   // Award helper that also pops a toast
