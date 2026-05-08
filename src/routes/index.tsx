@@ -129,33 +129,14 @@ function HeroPage() {
               </motion.form>
             </div>
 
-            {/* Mascot panel */}
+            {/* Live preview panel */}
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.3 }}
               className="hidden lg:block col-span-4 relative"
             >
-              <div className="relative aspect-square max-w-[360px] ml-auto">
-                <div className="absolute inset-4 rounded-[36px] gradient-warm opacity-20 blur-2xl" />
-                <div className="relative h-full surface-elevated rounded-[28px] p-6 flex flex-col items-center justify-center overflow-hidden">
-                  <div className="absolute inset-0 dot-pattern opacity-50" />
-                  <Mascot className="relative h-48 w-48 animate-float" animated />
-                  <div className="relative mt-4 text-center">
-                    <div className="font-serif text-2xl">Hi, I'm Owlbert.</div>
-                    <div className="text-xs text-muted-foreground mt-1">I'll read the lecture so you can think about it.</div>
-                  </div>
-                </div>
-                {/* Floating badge */}
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-3 -left-3 surface-elevated rounded-xl px-3 py-2 shadow-card flex items-center gap-2"
-                >
-                  <Sparkles className="h-3.5 w-3.5 text-primary" />
-                  <span className="text-xs font-medium">4 agents · 1 workspace</span>
-                </motion.div>
-              </div>
+              <LivePreview />
             </motion.div>
           </div>
         </section>
