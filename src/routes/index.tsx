@@ -36,11 +36,12 @@ function HeroPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Background — soft warm wash */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 grid-pattern opacity-40" />
-        <div className="absolute top-[-15%] right-[-8%] h-[520px] w-[520px] rounded-full bg-primary/15 blur-[140px] animate-float" />
-        <div className="absolute bottom-[-10%] left-[-10%] h-[420px] w-[420px] rounded-full bg-primary/10 blur-[140px] animate-float" style={{ animationDelay: "5s" }} />
+      {/* Living background — aurora + interactive constellation */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <Aurora />
+        <div className="absolute inset-0 grid-pattern opacity-25" />
+        <AnimatedBackground density={50} />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background pointer-events-none" />
       </div>
 
       <main className="flex-1">
