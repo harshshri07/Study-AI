@@ -6,7 +6,7 @@ export function Footer() {
           StudyAI <span className="mx-2 opacity-40">/</span> Cloudforce Hackathon 2026
         </p>
         <p className="font-mono uppercase tracking-wider opacity-70">
-          Powered by Claude Sonnet · Amazon Bedrock
+          Crafted for curious learners
         </p>
       </div>
     </footer>
