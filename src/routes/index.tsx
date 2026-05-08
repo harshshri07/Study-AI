@@ -212,3 +212,97 @@ function HeroPage() {
     </div>
   );
 }
+
+/* ─────────── Live preview: cycles through artifacts ─────────── */
+function LivePreview() {
+  const slides = [
+    {
+      tag: "Summary · TL;DR",
+      title: "Attention is a soft lookup.",
+      body: "Each token forms a query and scans every other token's key. Softmax weights give a smooth, differentiable index over the sequence.",
+    },
+    {
+      tag: "Flashcard · 03 / 14",
+      title: "What does softmax do here?",
+      body: "Turns raw similarity scores into a probability distribution so each token can blend information from the rest, end-to-end differentiable.",
+    },
+    {
+      tag: "Chat · with the lecture",
+      title: "Why multi-head?",
+      body: "Multiple heads let the model attend to different relationships in parallel — syntax, position, semantics — then concatenate.",
+    },
+    {
+      tag: "Search · semantic",
+      title: "“positional encoding”",
+      body: "Hit at 24:08 — “We add sinusoidal signals so the model knows where each token sits in the sequence…”",
+    },
+  ];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((x) => (x + 1) % slides.length), 3200);
+    return () => clearInterval(t);
+  }, [slides.length]);
+
+  return (
+    <div className="relative aspect-[4/5] max-w-[380px] ml-auto">
+      <div className="absolute inset-2 rounded-[36px] gradient-warm opacity-25 blur-3xl" />
+      <div className="relative h-full surface-elevated rounded-[28px] overflow-hidden shadow-elegant">
+        <div className="absolute inset-0 dot-pattern opacity-40" />
+
+        {/* Owlbert peeking */}
+        <div className="absolute -top-6 -right-4 z-10">
+          <Mascot className="h-24 w-24 drop-shadow-xl animate-float" animated />
+        </div>
+
+        {/* Top status */}
+        <div className="relative z-10 flex items-center justify-between px-5 pt-5">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-success animate-pulse-soft" />
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">live</span>
+          </div>
+          <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">studyai · workspace</div>
+        </div>
+
+        {/* Slides */}
+        <div className="relative z-10 px-6 pt-10 pb-6 h-full flex flex-col">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
+              transition={{ duration: 0.5 }}
+              className="flex-1"
+            >
+              <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary mb-3">
+                {slides[i].tag}
+              </div>
+              <h4 className="font-serif text-2xl leading-tight mb-3">{slides[i].title}</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">{slides[i].body}</p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Slide pips */}
+          <div className="flex items-center gap-1.5 mt-4">
+            {slides.map((_, idx) => (
+              <span
+                key={idx}
+                className={`h-1 rounded-full transition-all ${idx === i ? "w-8 bg-primary" : "w-3 bg-border"}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Floating chip */}
+      <motion.div
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -bottom-3 -left-3 surface-elevated rounded-xl px-3 py-2 shadow-card flex items-center gap-2"
+      >
+        <Sparkles className="h-3.5 w-3.5 text-primary" />
+        <span className="text-xs font-medium">4 agents · 1 workspace</span>
+      </motion.div>
+    </div>
+  );
+}
