@@ -110,7 +110,7 @@ function ProcessingPage() {
               Reading the lecture<span className="text-primary animate-blink">_</span>
             </h1>
             <p className="text-muted-foreground mt-3 text-base">
-              Four agents are working in sequence. This usually takes about 30 seconds.
+              We're building your study workspace. This usually takes about 30 seconds.
             </p>
           </div>
         </div>
