@@ -74,6 +74,7 @@ function RootComponent() {
         </div>
       </div>
       <ConfettiHost />
+      <Toaster />
     </ThemeProvider>
   );
 }
