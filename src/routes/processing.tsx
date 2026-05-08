@@ -204,7 +204,7 @@ function ProcessingPage() {
                   <span className="h-2 w-2 rounded-full bg-success/60" />
                 </div>
                 <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground ml-2">
-                  agent.log
+                  build.log
                 </span>
               </div>
               <div className="p-4 font-mono text-[11px] leading-relaxed text-muted-foreground space-y-1 min-h-[280px]">
