@@ -28,6 +28,16 @@ function Dashboard() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { progress, markSection } = useProgress(mockLecture.videoId);
   const { achievements, unlock } = useAchievements();
+  const { award, level, into, toNext, pct: xpPct, xp } = useXp();
+  const { ping, streak } = useStreak();
+  const prevLevelRef = useRef(level);
+
+  // Award helper that also pops a toast
+  const grant = (id: string, reason: string, amount: number) => {
+    if (award(id, reason, amount)) {
+      toast(`+${amount} XP`, { description: reason, icon: "✨" });
+    }
+  };
 
   const seek = (seconds: number, sectionId?: number) => {
     if (sectionId) { setActiveSection(sectionId); markSection(sectionId); }
@@ -36,15 +46,49 @@ function Dashboard() {
     }
   };
 
-  // Achievement: first section explored
+  // Streak ping on mount
+  useEffect(() => { ping(); }, [ping]);
+
+  // Level-up celebration
   useEffect(() => {
+    if (level > prevLevelRef.current) {
+      prevLevelRef.current = level;
+      celebrate();
+      toast(`Level ${level}!`, { description: "Keep that momentum going.", icon: "⭐" });
+    }
+  }, [level]);
+
+  // XP awards driven by progress
+  useEffect(() => {
+    progress.sectionsCompleted.forEach((id) =>
+      grant(`section-${id}`, `Explored chapter ${String(id).padStart(2, "0")}`, 10),
+    );
     if (progress.sectionsCompleted.length === 1) {
       unlock({ id: "first-jump", title: "First jump", desc: "You jumped to a chapter timestamp." });
     }
     if (progress.sectionsCompleted.length >= 5) {
       unlock({ id: "five-chapters", title: "Five chapters", desc: "You explored 5+ chapters." });
     }
-  }, [progress.sectionsCompleted.length, unlock]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress.sectionsCompleted.length]);
+
+  useEffect(() => {
+    progress.cardsReviewed.forEach((i) => grant(`card-${i}`, `Reviewed flashcard ${i + 1}`, 5));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress.cardsReviewed.length]);
+
+  useEffect(() => {
+    if (progress.chatUsed) grant("chat-used", "Asked Owlbert a question", 15);
+  }, [progress.chatUsed]);
+  useEffect(() => {
+    if (progress.searchUsed) grant("search-used", "Searched the lecture", 10);
+  }, [progress.searchUsed]);
+  useEffect(() => {
+    if (progress.quizScore !== null) {
+      grant("quiz-taken", "Completed the quiz", 20);
+      if (progress.quizScore === 100) grant("quiz-perfect", "Perfect quiz score", 50);
+    }
+  }, [progress.quizScore]);
 
   const tabs: { id: Tab; label: string; icon: typeof List }[] = [
     { id: "summary", label: "Summary", icon: FileText },
