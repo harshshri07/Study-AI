@@ -90,9 +90,11 @@ function ProcessingPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 grid-pattern opacity-40" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[420px] w-[420px] rounded-full bg-primary/12 blur-[120px] animate-pulse-soft" />
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <Aurora />
+        <div className="absolute inset-0 grid-pattern opacity-25" />
+        <AnimatedBackground density={40} />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background pointer-events-none" />
       </div>
 
       <main className="flex-1 mx-auto w-full max-w-[1100px] px-4 md:px-8 py-10 md:py-16">
