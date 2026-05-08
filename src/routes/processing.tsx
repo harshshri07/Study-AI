@@ -17,10 +17,10 @@ export const Route = createFileRoute("/processing")({
 });
 
 const stages = [
-  { code: "01", title: "Extractor", task: "Pulling transcript & captions", detail: "Fetched 1,847 segments · 1h 56m" },
-  { code: "02", title: "Structurer", task: "Detecting chapters & key concepts", detail: "Identified 9 sections · 14 concepts" },
-  { code: "03", title: "Synthesizer", task: "Writing summaries & flashcards", detail: "Generated 3 summaries · 6 cards" },
-  { code: "04", title: "Indexer", task: "Embedding for semantic search", detail: "Indexed 24,310 tokens" },
+  { code: "01", title: "Reading the lecture", task: "Pulling transcript & captions", detail: "Fetched 1,847 segments · 1h 56m" },
+  { code: "02", title: "Mapping the structure", task: "Detecting chapters & key concepts", detail: "Identified 9 sections · 14 concepts" },
+  { code: "03", title: "Writing your study kit", task: "Drafting summaries & flashcards", detail: "Generated 3 summaries · 6 cards" },
+  { code: "04", title: "Indexing for search", task: "Preparing semantic search & translation", detail: "Indexed 24,310 tokens" },
 ];
 
 const tips = [
@@ -28,6 +28,7 @@ const tips = [
   "Tip: ask the chatbot a question — it knows the lecture.",
   "Tip: flip flashcards with a click. Mark reviewed to track progress.",
   "Tip: switch summary depth: TL;DR, Standard, or Deep dive.",
+  "Tip: keep a daily streak — even 5 focused minutes counts.",
 ];
 
 function ProcessingPage() {
@@ -40,16 +41,16 @@ function ProcessingPage() {
   const [tipIdx, setTipIdx] = useState(0);
 
   const logLines = [
-    "› init: handshake with Bedrock gateway",
-    "› extractor: streaming caption track …",
-    "› extractor: 1,847 segments resolved",
-    "› structurer: clustering by topic similarity",
-    "› structurer: 9 chapters detected",
-    "› synthesizer: drafting tier-1 summary",
-    "› synthesizer: 6 Q/A pairs generated",
-    "› indexer: building 1,536-d embeddings",
-    "› indexer: vector store committed",
-    "› ready: opening workspace …",
+    "› init: warming up the workspace",
+    "› reading: streaming caption track …",
+    "› reading: 1,847 segments resolved",
+    "› structure: clustering by topic similarity",
+    "› structure: 9 chapters detected",
+    "› writing: drafting tier-1 summary",
+    "› writing: 6 Q/A pairs generated",
+    "› indexing: building search vectors",
+    "› indexing: workspace committed",
+    "› ready: opening your study kit …",
   ];
 
   useEffect(() => {
@@ -109,7 +110,7 @@ function ProcessingPage() {
               Reading the lecture<span className="text-primary animate-blink">_</span>
             </h1>
             <p className="text-muted-foreground mt-3 text-base">
-              Four agents are working in sequence. This usually takes about 30 seconds.
+              We're building your study workspace. This usually takes about 30 seconds.
             </p>
           </div>
         </div>
@@ -203,7 +204,7 @@ function ProcessingPage() {
                   <span className="h-2 w-2 rounded-full bg-success/60" />
                 </div>
                 <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground ml-2">
-                  agent.log
+                  build.log
                 </span>
               </div>
               <div className="p-4 font-mono text-[11px] leading-relaxed text-muted-foreground space-y-1 min-h-[280px]">
