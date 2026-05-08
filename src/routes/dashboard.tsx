@@ -196,8 +196,10 @@ function Dashboard() {
             </div>
           </section>
 
-          {/* Right: Next best action + concepts + insights */}
+          {/* Right: Level + quests + next action + concepts + insights */}
           <aside className="lg:col-span-3 order-3 space-y-5">
+            <LevelPanel />
+            <DailyQuestsPanel />
             <NextBestAction tab={tab} setTab={setTab} />
             <StudyTimerPanel />
             <InsightsPanel />
