@@ -301,7 +301,7 @@ function LivePreview() {
         className="absolute -bottom-3 -left-3 surface-elevated rounded-xl px-3 py-2 shadow-card flex items-center gap-2"
       >
         <Sparkles className="h-3.5 w-3.5 text-primary" />
-        <span className="text-xs font-medium">4 agents · 1 workspace</span>
+        <span className="text-xs font-medium">Live study workspace</span>
       </motion.div>
     </div>
   );
