@@ -5,14 +5,15 @@ import {
   List, FileText, Layers, Search, Languages as LangIcon, MessageCircle,
   Play, ChevronLeft, ChevronRight, Quote, Check, Loader2, Plus, Sparkles,
   Send, Timer, Pause, Play as PlayIcon, RotateCcw, Trophy, CircleCheck,
-  HelpCircle, Target, Flame,
+  HelpCircle, Target, Flame, Zap, Star,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot";
 import { mockLecture, languages } from "@/lib/mock-data";
 import { semanticSearch, chat as chatStream, translate } from "@/lib/api";
-import { useProgress, useAchievements, useStudyTimer, fmtClock } from "@/lib/store";
+import { useProgress, useAchievements, useStudyTimer, fmtClock, useXp, useStreak } from "@/lib/store";
 import { celebrate } from "@/components/confetti";
 
 export const Route = createFileRoute("/dashboard")({
