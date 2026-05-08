@@ -273,6 +273,107 @@ function Row({ label, value, pct }: { label: string; value: string; pct: number 
   );
 }
 
+/* ───────── Gamification panels ───────── */
+
+function LevelPanel() {
+  const { level, into, toNext, pct, xp } = useXp();
+  const { streak, isToday } = useStreak();
+  return (
+    <div className="surface-elevated rounded-xl p-4 relative overflow-hidden">
+      <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full gradient-warm opacity-20 blur-2xl" />
+      <div className="relative flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="h-9 w-9 rounded-lg gradient-warm flex items-center justify-center shadow-glow">
+            <Star className="h-4 w-4 text-primary-foreground" strokeWidth={2.25} />
+          </div>
+          <div>
+            <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground">Scholar level</div>
+            <div className="font-serif text-2xl leading-none mt-0.5">Lv. {level}</div>
+          </div>
+        </div>
+        <div
+          className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md transition ${
+            streak > 0 && isToday ? "bg-warning/15 text-warning" : "bg-surface text-muted-foreground"
+          }`}
+          title={isToday ? "Streak active today" : "Open a lecture today to extend your streak"}
+        >
+          <Flame className={`h-3.5 w-3.5 ${streak > 0 && isToday ? "" : "opacity-50"}`} />
+          <span className="tabular-nums">{streak}d</span>
+        </div>
+      </div>
+      <div className="relative h-1.5 bg-border rounded-full overflow-hidden mb-2">
+        <motion.div
+          className="h-full gradient-warm"
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.6 }}
+        />
+      </div>
+      <div className="relative flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+        <span>{into} / 100 XP</span>
+        <span>{toNext} to Lv. {level + 1}</span>
+      </div>
+      <div className="relative mt-3 pt-3 border-t border-border/60 flex items-center justify-between text-[11px]">
+        <span className="text-muted-foreground">Total XP</span>
+        <span className="font-mono tabular-nums">{xp.toLocaleString()}</span>
+      </div>
+    </div>
+  );
+}
+
+function DailyQuestsPanel() {
+  const { progress } = useProgress(mockLecture.videoId);
+  const quests = [
+    { id: "q-explore", label: "Explore 3 chapters", done: progress.sectionsCompleted.length >= 3, xp: 30, value: `${Math.min(progress.sectionsCompleted.length, 3)}/3` },
+    { id: "q-cards", label: "Review 5 flashcards", done: progress.cardsReviewed.length >= 5, xp: 25, value: `${Math.min(progress.cardsReviewed.length, 5)}/5` },
+    { id: "q-chat", label: "Ask Owlbert anything", done: progress.chatUsed, xp: 15, value: progress.chatUsed ? "✓" : "—" },
+    { id: "q-quiz", label: "Score 80%+ on the quiz", done: (progress.quizScore ?? 0) >= 80, xp: 50, value: progress.quizScore !== null ? `${progress.quizScore}%` : "—" },
+  ];
+  const completed = quests.filter((q) => q.done).length;
+  const allDone = completed === quests.length;
+  return (
+    <div className="surface rounded-xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground flex items-center gap-1.5">
+          <Zap className="h-3 w-3 text-primary" /> Today's quests
+        </div>
+        <span className={`font-mono text-[10px] tabular-nums ${allDone ? "text-success" : "text-muted-foreground"}`}>
+          {completed}/{quests.length}
+        </span>
+      </div>
+      <ul className="space-y-1.5">
+        {quests.map((q) => (
+          <li
+            key={q.id}
+            className={`flex items-center gap-2.5 rounded-md px-2 py-1.5 transition ${
+              q.done ? "bg-success/[0.06]" : "hover:bg-surface-elevated/40"
+            }`}
+          >
+            <span
+              className={`h-4 w-4 rounded-md border flex items-center justify-center shrink-0 transition ${
+                q.done ? "border-success bg-success/20 text-success" : "border-border"
+              }`}
+            >
+              {q.done && <Check className="h-2.5 w-2.5" strokeWidth={3} />}
+            </span>
+            <span className={`flex-1 text-xs ${q.done ? "text-foreground/70 line-through" : "text-foreground/90"}`}>
+              {q.label}
+            </span>
+            <span className="font-mono text-[10px] text-muted-foreground tabular-nums">{q.value}</span>
+            <span className={`font-mono text-[10px] tabular-nums ${q.done ? "text-success" : "text-primary"}`}>+{q.xp}</span>
+          </li>
+        ))}
+      </ul>
+      {allDone && (
+        <div className="mt-3 pt-3 border-t border-border/60 text-[11px] text-success flex items-center gap-1.5">
+          <Trophy className="h-3 w-3" /> All quests cleared today.
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 function OutlineRail({ activeSection, onSeek, completed }: { activeSection: number; onSeek: (s: number, id?: number) => void; completed: number[] }) {
   return (
     <div className="lg:sticky lg:top-4">
