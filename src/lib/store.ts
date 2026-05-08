@@ -30,6 +30,8 @@ const KEYS = {
   progress: "studyai.progress",
   achievements: "studyai.achievements",
   unlock: "studyai.unlock", // faculty/provost code unlocks
+  xp: "studyai.xp",
+  streak: "studyai.streak",
 };
 
 const subs = new Set<() => void>();
