@@ -197,3 +197,62 @@ export function fmtClock(s: number) {
   const sec = s % 60;
   return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 }
+
+/* ─── XP & Levels ─── */
+export type XpEvent = { id: string; reason: string; amount: number; at: number };
+export type XpState = { total: number; events: XpEvent[] };
+
+const XP_PER_LEVEL = 100;
+export function levelFromXp(xp: number) {
+  const level = Math.floor(xp / XP_PER_LEVEL) + 1;
+  const into = xp % XP_PER_LEVEL;
+  return { level, into, toNext: XP_PER_LEVEL - into, pct: (into / XP_PER_LEVEL) * 100 };
+}
+
+export function useXp() {
+  const [state, setState] = useStore<XpState>(KEYS.xp, { total: 0, events: [] });
+  const award = useCallback((id: string, reason: string, amount: number): boolean => {
+    let granted = false;
+    setState((prev) => {
+      if (prev.events.some((e) => e.id === id)) return prev;
+      granted = true;
+      return {
+        total: prev.total + amount,
+        events: [{ id, reason, amount, at: Date.now() }, ...prev.events].slice(0, 50),
+      };
+    });
+    return granted;
+  }, [setState]);
+  const meta = levelFromXp(state.total);
+  return { xp: state.total, events: state.events, award, ...meta };
+}
+
+/* ─── Daily streak ─── */
+export type StreakState = { count: number; lastDay: string };
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function dayDiff(a: string, b: string) {
+  const da = new Date(a).getTime();
+  const db = new Date(b).getTime();
+  return Math.round((db - da) / 86400000);
+}
+
+export function useStreak() {
+  const [state, setState] = useStore<StreakState>(KEYS.streak, { count: 0, lastDay: "" });
+  const ping = useCallback(() => {
+    const today = todayKey();
+    setState((prev) => {
+      if (prev.lastDay === today) return prev;
+      if (!prev.lastDay) return { count: 1, lastDay: today };
+      const diff = dayDiff(prev.lastDay, today);
+      if (diff === 1) return { count: prev.count + 1, lastDay: today };
+      return { count: 1, lastDay: today };
+    });
+  }, [setState]);
+  const isToday = state.lastDay === todayKey();
+  return { streak: state.count, isToday, ping };
+}
+
