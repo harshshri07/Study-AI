@@ -76,7 +76,7 @@ function HeroPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="mt-7 text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed"
               >
-                Paste a YouTube URL. Four AI agents extract, structure, and summarize the lecture into a calm, focused study workspace — with chat, flashcards, and semantic search built in.
+                Paste a YouTube URL. We'll turn the lecture into a calm, focused study workspace — outline, summaries, flashcards, lecture-aware chat, and semantic search, all in one place.
               </motion.p>
 
               {/* URL input */}
