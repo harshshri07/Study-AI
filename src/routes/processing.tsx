@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { Mascot } from "@/components/mascot";
+import { AnimatedBackground, Aurora } from "@/components/animated-bg";
 import { z } from "zod";
 import { processUrl } from "@/lib/api";
 import { useRecents } from "@/lib/store";
